@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RecipesService } from '../core/services/recipes.service';
 import { DataViewModule } from 'primeng/dataview';
@@ -10,6 +10,8 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
+import { Recipe } from '../core/model/recipe.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-recipes-list',
@@ -30,8 +32,12 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./recipes-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RecipesListComponent {
-  recipes$ = this.service.getRecipes();
+export class RecipesListComponent implements OnInit {
+  recipes$: Observable<Recipe[]> | undefined;
 
   constructor(private service: RecipesService) {}
+
+  ngOnInit(): void {
+    this.recipes$ = this.service.getRecipes();
+  }
 }
