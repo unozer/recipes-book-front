@@ -2,15 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Recipe } from '../model/recipe.model';
 import { environment } from 'src/environments/environment';
-const BASE_PATH = environment.basePath
+import { Observable } from 'rxjs';
 
+const BASE_PATH = environment.basePath;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class RecipesService {
+  constructor(private http: HttpClient) {}
 
-  recipes$ = this.http.get<Recipe[]>(`${BASE_PATH}/recipes`);
-  constructor(private http: HttpClient) { }
+  getRecipes(): Observable<Recipe[]> {
+    return this.http.get<Recipe[]>(`${BASE_PATH}/recipes`);
+  }
 }

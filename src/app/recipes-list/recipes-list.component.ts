@@ -14,7 +14,8 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-recipes-list',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     DataViewModule,
     PanelModule,
     DialogModule,
@@ -22,16 +23,15 @@ import { FormsModule } from '@angular/forms';
     InputTextModule,
     ButtonModule,
     RippleModule,
-    RatingModule, FormsModule
+    RatingModule,
+    FormsModule,
   ],
   templateUrl: './recipes-list.component.html',
   styleUrls: ['./recipes-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
-
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipesListComponent {
-  recipes$ = this.service.recipes$;
+  recipes$ = this.service.getRecipes();
 
-  constructor(private service: RecipesService) { }
-
+  constructor(private service: RecipesService) {}
 }
