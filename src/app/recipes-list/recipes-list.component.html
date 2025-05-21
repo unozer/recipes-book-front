@@ -24,9 +24,13 @@
                         <p-button class="recipe-favourite" icon="pi pi-heart"></p-button>
                     </div>
                 </div>
+                } @empty {
+                    <div>There are no recipes</div>
                 }
             </div>
         </ng-template>
     </p-dataView>
 </div>
+} @else {
+    <div>There are no recipes</div>
 }
