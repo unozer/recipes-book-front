@@ -11,7 +11,7 @@ import { RippleModule } from 'primeng/ripple';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { Recipe } from '../core/model/recipe.model';
-import { Observable } from 'rxjs';
+import { combineLatest, filter, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-recipes-list',
@@ -32,12 +32,21 @@ import { Observable } from 'rxjs';
   styleUrls: ['./recipes-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RecipesListComponent implements OnInit {
-  recipes$: Observable<Recipe[]> | undefined;
+export class RecipesListComponent {
+  recipes$ = this.service.recipes$;
+
+  filterRecipeAction$ = this.service.filterRecipeAction$;
+
+  filteredRecipes$ = combineLatest([this.recipes$, this.filterRecipeAction$])
+  .pipe(
+    map(([recipes, filter]: [Recipe[], Recipe]) => {
+      const filterTitle = filter?.title?.toLowerCase() ?? '';
+      return recipes.filter((recipe) => {
+        recipe.title?.toLowerCase().includes(filterTitle);
+      })
+    })
+  );
 
   constructor(private service: RecipesService) {}
 
-  ngOnInit(): void {
-    this.recipes$ = this.service.getRecipes();
-  }
 }
