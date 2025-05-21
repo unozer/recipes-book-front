@@ -6,7 +6,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
 import { Recipe } from '../core/model/recipe.model';
 import * as recipeTags from '../core/model/tags';
-import { catchError, concatMap, of, tap } from 'rxjs';
+import { catchError, concatMap, of, switchMap, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -35,7 +35,7 @@ export class RecipeCreationComponent {
   tags = recipeTags.TAGS;
 
   valueChanges$ = this.recipeForm.valueChanges.pipe(
-    concatMap(formValue => 
+    switchMap(formValue => 
       this.recipesService.saveRecipe(<Recipe>formValue)),
       catchError(errors => of(errors))
      // tap(result => this.saveSuccess(result)
