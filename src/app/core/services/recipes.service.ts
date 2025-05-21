@@ -25,4 +25,8 @@ export class RecipesService {
   updateFilters(filter: Recipe) {
     this.filterRecipeSubject.next(filter);
   }
+
+  saveRecipe(recipe: Recipe): Observable<Recipe> {
+    return this.http.post<Recipe>(`${BASE_PATH}/recipes`, recipe);
+  }
 }
