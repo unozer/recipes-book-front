@@ -6,18 +6,41 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
 import { Recipe } from '../core/model/recipe.model';
 import * as recipeTags from '../core/model/tags';
-import { catchError, concatMap, of, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  concatMap,
+  debounce,
+  debounceTime,
+  distinct,
+  distinctUntilChanged,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @Component({
-selector: 'app-recipe-creation',
+  selector: 'app-recipe-creation',
   standalone: true,
-  imports: [RadioButtonModule, FormsModule, ReactiveFormsModule, ButtonModule, AsyncPipe],
+  imports: [
+    AutoCompleteModule,
+    RadioButtonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    AsyncPipe,
+  ],
   templateUrl: './recipe-creation.component.html',
-  styleUrl: './recipe-creation.component.css'
+  styleUrl: './recipe-creation.component.css',
 })
 export class RecipeCreationComponent {
-  constructor(private fb: FormBuilder, private recipesService: RecipesService) {}
+  constructor(
+    private fb: FormBuilder,
+    private recipesService: RecipesService
+  ) {}
 
   recipeForm = this.fb.group<Recipe>({
     id: Math.floor(1000 + Math.random() * 9000),
@@ -34,15 +57,25 @@ export class RecipeCreationComponent {
 
   tags = recipeTags.TAGS;
 
+  searchTerms = new BehaviorSubject<string>('');
+
+  tagValues$ = this.searchTerms.pipe(
+    debounceTime(2000),
+    distinctUntilChanged(),
+    switchMap((term: string) => this.recipesService.getTags$(term))
+  );
+
   valueChanges$ = this.recipeForm.valueChanges.pipe(
-    switchMap(formValue => 
-      this.recipesService.saveRecipe(<Recipe>formValue)),
-      catchError(errors => of(errors))
-     // tap(result => this.saveSuccess(result)
-    
+    switchMap((formValue) => this.recipesService.saveRecipe(<Recipe>formValue)),
+    catchError((errors) => of(errors))
+    // tap(result => this.saveSuccess(result)
   );
 
   saveSuccess(_result: Recipe) {
     alert('Recipe saved successfully');
+  }
+
+  updateSearchTerm(searchTerm: string) {
+    this.searchTerms.next(searchTerm);
   }
 }

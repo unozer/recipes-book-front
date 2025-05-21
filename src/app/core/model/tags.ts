@@ -6,6 +6,7 @@ export interface Tag {
 export const TAGS: Tag[] = [
     { name: 'Vegetarian', key: 'vegetarian' },
     { name: 'Vegan', key: 'vegan' },
+    { name: 'Vegan Friendly', key: 'vegan-friendly' },
     { name: 'Gluten Free', key: 'gluten-free' },
     { name: 'Dairy Free', key: 'dairy-free' },
     { name: 'Nut Free', key: 'nut-free' },

@@ -20,14 +20,14 @@
 
         <div class="col-3">
             <label for="Tags">Tags</label>
-            <!-- @for (let tag of tags) {
+            <!-- @for (tag of tags; track tags) {
             <p-radioButton [inputId]="tag.key" [value]="tag" formControlName="tags"></p-radioButton>
             <label class="recipe-tag" [for]="tag.key">{{tag.name}}</label>
             } -->
-            <!-- @if (tagValues$ | async; as tags) {
+            @if (tagValues$ | async; as tags) {
             <p-autoComplete formControlName="tags" [suggestions]="tags"
                 (completeMethod)="updateSearchTerm($event.query)" field="name"></p-autoComplete>
-            } -->
+            }
         </div>
     </div>
 
