@@ -37,16 +37,17 @@ export class RecipesListComponent {
 
   filterRecipeAction$ = this.service.filterRecipeAction$;
 
-  filteredRecipes$ = combineLatest([this.recipes$, this.filterRecipeAction$])
-  .pipe(
+  filteredRecipes$ = combineLatest([
+    this.recipes$,
+    this.filterRecipeAction$,
+  ]).pipe(
     map(([recipes, filter]: [Recipe[], Recipe]) => {
       const filterTitle = filter?.title?.toLowerCase() ?? '';
-      return recipes.filter((recipe) => {
-        recipe.title?.toLowerCase().includes(filterTitle);
-      })
+      return recipes.filter((recipe) =>
+        recipe.title?.toLowerCase().includes(filterTitle)
+      );
     })
   );
 
   constructor(private service: RecipesService) {}
-
 }
