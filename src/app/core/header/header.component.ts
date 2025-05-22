@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
+import { SharedDataService } from 'src/app/shared-data.service';
 
 @Component({
   selector: 'app-header',
@@ -11,4 +12,6 @@ import { RouterModule } from '@angular/router';
 })
 export class HeaderComponent {
 
+  selectedRecipe$ = this.sharedService.selectedRecipe$;
+  constructor(private sharedService: SharedDataService) {}
 }

@@ -5,7 +5,7 @@
         <ng-template let-recipes pTemplate="gridItem">
             <div class="grid grid-nogutter">
                 @for (recipe of recipes; track recipe.id) {
-                <div class="col-12" style="cursor: pointer;" class="recipe-grid-item card">
+                <div style="cursor: pointer;" class="recipe-grid-item card" (click)="editRecipe(recipe)">
                     <div class="recipe-grid-item-top">
                         <div>
                             <i class="pi pi-tag recipe-category-icon"></i>

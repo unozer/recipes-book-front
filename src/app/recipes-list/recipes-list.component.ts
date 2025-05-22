@@ -12,6 +12,8 @@ import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { Recipe } from '../core/model/recipe.model';
 import { combineLatest, filter, map, Observable } from 'rxjs';
+import { SharedDataService } from '../shared-data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recipes-list',
@@ -49,5 +51,14 @@ export class RecipesListComponent {
     })
   );
 
-  constructor(private service: RecipesService) {}
+  constructor(
+    private service: RecipesService,
+    private sharedService: SharedDataService,
+    private router: Router
+  ) {}
+
+  editRecipe(recipe: Recipe) {
+    this.sharedService.updateSelectedRecipe(recipe);
+    this.router.navigate(['recipes/details']);
+  }
 }

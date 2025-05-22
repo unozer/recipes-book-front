@@ -1,0 +1,8 @@
+@if (selectedRecipe$ | async; as recipe) {
+    <div style="margin: 64px; text-align: center;">
+        <h1>{{recipe.title}}</h1>
+        <p>{{recipe.steps}}</p>
+        <p>{{recipe.ingredients}}</p>
+        <p>{{recipe.category}}</p>
+    </div>
+}
