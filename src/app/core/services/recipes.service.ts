@@ -5,9 +5,9 @@ import { environment } from 'src/environments/environment';
 import {
   BehaviorSubject,
   catchError,
-  combineLatest,
   Observable,
   of,
+  shareReplay,
 } from 'rxjs';
 import { Tag } from '../model/tags';
 
@@ -23,7 +23,10 @@ export class RecipesService {
 
   recipes$ = this.http
     .get<Recipe[]>(`${BASE_PATH}/recipes`)
-    .pipe(catchError(() => of([])));
+    .pipe(
+      shareReplay(1),
+      catchError(() => of([]))
+    );
 
   filterRecipeAction$ = this.filterRecipeSubject.asObservable();
 
