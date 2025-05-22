@@ -7,6 +7,7 @@ import {
   catchError,
   Observable,
   of,
+  ReplaySubject,
   share,
   shareReplay,
   switchMap,
@@ -28,7 +29,12 @@ export class RecipesService {
 
   recipes$ = timer$.pipe(
     switchMap((_) => this.http.get<Recipe[]>(`${BASE_PATH}/recipes`)),
-    shareReplay({ bufferSize: 1, refCount: false })
+    share({ 
+      connector: () => new ReplaySubject(),
+      resetOnRefCountZero: false,
+      resetOnComplete: true,
+      resetOnError: true,
+     })
   );
 
   filterRecipeAction$ = this.filterRecipeSubject.asObservable();
