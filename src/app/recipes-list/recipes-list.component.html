@@ -13,7 +13,11 @@
                         </div>
                     </div>
                     <div class="recipe-grid-item-content">
+                        @defer (on hover) {
                         <img class="recipe-image" [src]="'assets/recipes/'+ recipe.imageUrl" alt="{{recipe.title}}" />
+                        } @placeholder {
+                        <div>Hover to load the image</div>
+                        }
                         <div class="recipe-name">{{recipe?.title}}</div>
                         <div class="recipe-description">{{recipe?.title}}</div>
                         <p-rating class="recipe-rating" [ngModel]="recipe.rating" [readonly]="true" [cancel]="false">
@@ -25,12 +29,12 @@
                     </div>
                 </div>
                 } @empty {
-                    <div>There are no recipes</div>
+                <div>There are no recipes</div>
                 }
             </div>
         </ng-template>
     </p-dataView>
 </div>
 } @else {
-    <div>There are no recipes</div>
+<div>There are no recipes</div>
 }
