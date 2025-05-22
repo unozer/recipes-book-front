@@ -7,11 +7,16 @@ import {
   catchError,
   Observable,
   of,
+  share,
   shareReplay,
+  switchMap,
+  timer,
 } from 'rxjs';
 import { Tag } from '../model/tags';
 
 const BASE_PATH = environment.basePath;
+const REFRESH_INTERVAL = 1000 * 10;
+const timer$ = timer(0, REFRESH_INTERVAL);
 
 @Injectable({
   providedIn: 'root',
@@ -21,12 +26,10 @@ export class RecipesService {
     title: '',
   });
 
-  recipes$ = this.http
-    .get<Recipe[]>(`${BASE_PATH}/recipes`)
-    .pipe(
-      shareReplay(1),
-      catchError(() => of([]))
-    );
+  recipes$ = timer$.pipe(
+    switchMap((_) => this.http.get<Recipe[]>(`${BASE_PATH}/recipes`)),
+    shareReplay(1)
+  );
 
   filterRecipeAction$ = this.filterRecipeSubject.asObservable();
 
