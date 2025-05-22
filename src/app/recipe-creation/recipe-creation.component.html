@@ -1,5 +1,5 @@
 @if (valueChanges$ | async) {}
-<!-- <ng-container *ngIf="saveClick$ | async"></ng-container> -->
+@if (saveClick$ | async) {}
 
 <h1>New Recipe</h1>
 <form [formGroup]="recipeForm">
@@ -71,5 +71,5 @@
 
 <div class="right-actions-panel">
     <p-button class="recipe-button" label="Cancel"></p-button>
-    <!-- <p-button class="recipe-button" (click)="updateRecipe()" label="Save"></p-button> -->
+    <p-button class="recipe-button" (click)="updateRecipe()" label="Save"></p-button>
 </div>

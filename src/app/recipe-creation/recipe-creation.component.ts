@@ -14,8 +14,11 @@ import {
   debounceTime,
   distinct,
   distinctUntilChanged,
+  exhaustMap,
+  map,
   Observable,
   of,
+  Subject,
   switchMap,
   tap,
 } from 'rxjs';
@@ -37,6 +40,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
   styleUrl: './recipe-creation.component.css',
 })
 export class RecipeCreationComponent {
+
   constructor(
     private fb: FormBuilder,
     private recipesService: RecipesService
@@ -54,6 +58,11 @@ export class RecipeCreationComponent {
     yield: 0,
     steps: '',
   });
+
+  private saveClick = new Subject<Boolean>();
+  saveClick$ = this.saveClick.pipe(
+    exhaustMap(() => this.recipesService.saveRecipe(<Recipe>this.recipeForm.value))
+  );
 
   tags = recipeTags.TAGS;
 
@@ -77,5 +86,9 @@ export class RecipeCreationComponent {
 
   updateSearchTerm(searchTerm: string) {
     this.searchTerms.next(searchTerm);
+  }
+
+  updateRecipe() {
+    this.saveClick.next(true);
   }
 }
