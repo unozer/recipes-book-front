@@ -28,7 +28,7 @@ export class RecipesService {
 
   recipes$ = timer$.pipe(
     switchMap((_) => this.http.get<Recipe[]>(`${BASE_PATH}/recipes`)),
-    shareReplay(1)
+    shareReplay({ bufferSize: 1, refCount: false })
   );
 
   filterRecipeAction$ = this.filterRecipeSubject.asObservable();
