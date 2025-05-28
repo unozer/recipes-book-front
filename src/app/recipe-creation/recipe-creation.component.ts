@@ -15,6 +15,7 @@ import {
   distinct,
   distinctUntilChanged,
   exhaustMap,
+  forkJoin,
   map,
   Observable,
   of,
@@ -24,6 +25,8 @@ import {
 } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { FileUploadModule } from 'primeng/fileupload';
+import { UploadRecipePreviewService } from '../core/services/upload-recipe-preview.service';
 
 @Component({
   selector: 'app-recipe-creation',
@@ -35,15 +38,32 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     ReactiveFormsModule,
     ButtonModule,
     AsyncPipe,
+    FileUploadModule
   ],
   templateUrl: './recipe-creation.component.html',
   styleUrl: './recipe-creation.component.css',
 })
 export class RecipeCreationComponent {
 
+  uploadedFileSubject$ = new BehaviorSubject<File[]>([]);
+
+  onUpload(files: File[]) {
+    this.uploadedFileSubject$.next(files);
+  }
+
+  uploadRecipeImages$ = this.uploadedFileSubject$.pipe(
+    switchMap(uploadedFiles => forkJoin(
+      uploadedFiles.map((file: File) => 
+      this.uploadService.upload(
+        this.recipeForm.value.id, file
+      ))
+    ))
+  );
+
   constructor(
     private fb: FormBuilder,
-    private recipesService: RecipesService
+    private recipesService: RecipesService,
+    private uploadService: UploadRecipePreviewService
   ) {}
 
   recipeForm = this.fb.group<Recipe>({
