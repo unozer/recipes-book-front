@@ -38,13 +38,12 @@ import { UploadRecipePreviewService } from '../core/services/upload-recipe-previ
     ReactiveFormsModule,
     ButtonModule,
     AsyncPipe,
-    FileUploadModule
+    FileUploadModule,
   ],
   templateUrl: './recipe-creation.component.html',
   styleUrl: './recipe-creation.component.css',
 })
 export class RecipeCreationComponent {
-
   uploadedFileSubject$ = new BehaviorSubject<File[]>([]);
 
   onUpload(files: File[]) {
@@ -52,12 +51,15 @@ export class RecipeCreationComponent {
   }
 
   uploadRecipeImages$ = this.uploadedFileSubject$.pipe(
-    switchMap(uploadedFiles => forkJoin(
-      uploadedFiles.map((file: File) => 
-      this.uploadService.upload(
-        this.recipeForm.value.id, file
-      ))
-    ))
+    switchMap((uploadedFiles) =>
+      forkJoin(
+        uploadedFiles.map((file: File) =>
+          this.uploadService
+            .upload(this.recipeForm.value.id, file)
+            .pipe(catchError((errors) => of(errors)))
+        )
+      )
+    )
   );
 
   constructor(
@@ -81,7 +83,9 @@ export class RecipeCreationComponent {
 
   private saveClick = new Subject<Boolean>();
   saveClick$ = this.saveClick.pipe(
-    exhaustMap(() => this.recipesService.saveRecipe(<Recipe>this.recipeForm.value))
+    exhaustMap(() =>
+      this.recipesService.saveRecipe(<Recipe>this.recipeForm.value)
+    )
   );
 
   tags = recipeTags.TAGS;
