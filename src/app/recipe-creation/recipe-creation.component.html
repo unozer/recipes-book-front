@@ -36,11 +36,11 @@
     <div class="row">
         <div class="col-12">
             <label for="ImageUrl">ImageUrl</label>
-            <p-fileUpload name="imageUrl" 
-            [multiple]=true 
-            [customUpload]="true" 
-            accept="image/*"
-            (uploadHandler)="onUpload($event.files)"></p-fileUpload>
+            <p-fileUpload name="imageUrl" [multiple]=true [customUpload]="true" accept="image/*"
+                (uploadHandler)="onUpload($event.files)"></p-fileUpload>
+            @if (uploadProgress > 0) {
+            <p-progressBar [value]="uploadProgress"></p-progressBar>
+            }
         </div>
 
         <div class="col-3">

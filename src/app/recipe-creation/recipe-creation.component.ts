@@ -15,6 +15,7 @@ import {
   distinct,
   distinctUntilChanged,
   exhaustMap,
+  finalize,
   forkJoin,
   map,
   Observable,
@@ -44,9 +45,14 @@ import { UploadRecipePreviewService } from '../core/services/upload-recipe-previ
   styleUrl: './recipe-creation.component.css',
 })
 export class RecipeCreationComponent {
+  counter: number = 0;
+  uploadProgress: number = 0;
+
   uploadedFileSubject$ = new BehaviorSubject<File[]>([]);
 
   onUpload(files: File[]) {
+    this.counter = 0;
+    this.uploadProgress = 0;
     this.uploadedFileSubject$.next(files);
   }
 
@@ -56,11 +62,18 @@ export class RecipeCreationComponent {
         uploadedFiles.map((file: File) =>
           this.uploadService
             .upload(this.recipeForm.value.id, file)
-            .pipe(catchError((errors) => of(errors)))
+            .pipe(
+              catchError((errors) => of(errors)),
+              finalize(() => this.calculateProgressPercentage(++this.counter, uploadedFiles.length))
+            )
         )
       )
     )
   );
+
+  private calculateProgressPercentage(completedRequests: number, totalRequests: number) {
+    this.uploadProgress = Math.round(completedRequests / totalRequests * 100);
+  }
 
   constructor(
     private fb: FormBuilder,
