@@ -11,9 +11,10 @@ import { RippleModule } from 'primeng/ripple';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { Recipe } from '../core/model/recipe.model';
-import { combineLatest, filter, map, Observable } from 'rxjs';
+import { combineLatest, filter, map, Observable, scan } from 'rxjs';
 import { SharedDataService } from '../shared-data.service';
 import { Router } from '@angular/router';
+import { RealTimeService } from '../core/services/real-time.service';
 
 @Component({
   selector: 'app-recipes-list',
@@ -35,7 +36,14 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipesListComponent {
-  recipes$ = this.service.recipes$;
+  recipes$ = combineLatest([
+    this.service.recipes$,
+    this.realTimeService.messages$,
+  ]).pipe(
+    scan((acc: Recipe[], [recipes, realTimeRecipes]: [Recipe[], Recipe[]]) => {
+      return acc.length === 0 && realTimeRecipes.length === 0 ? recipes : [...acc, ...realTimeRecipes];
+    }, [])
+  );
 
   filterRecipeAction$ = this.service.filterRecipeAction$;
 
@@ -54,6 +62,7 @@ export class RecipesListComponent {
   constructor(
     private service: RecipesService,
     private sharedService: SharedDataService,
+    private realTimeService: RealTimeService,
     private router: Router
   ) {}
 

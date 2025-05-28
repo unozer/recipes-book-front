@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RealTimeService } from './core/services/real-time.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'recipes-book-front';
+
+  constructor(private realTimeService: RealTimeService) {
+    console.log('realTimeService');
+    realTimeService.connect();
+  }
 }
