@@ -1,48 +1,32 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Recipe } from '../model/recipe.model';
 import { environment } from 'src/environments/environment';
 import {
-  BehaviorSubject,
-  catchError,
   Observable,
-  of,
-  ReplaySubject,
-  share,
-  shareReplay,
-  switchMap,
-  timer,
 } from 'rxjs';
 import { Tag } from '../model/tags';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 const BASE_PATH = environment.basePath;
-const REFRESH_INTERVAL = 1000 * 10;
-const timer$ = timer(0, REFRESH_INTERVAL);
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecipesService {
-  private filterRecipeSubject = new BehaviorSubject<Recipe>({
-    title: '',
+  recipes$ = this.http.get<Recipe[]>(`${BASE_PATH}/recipes`);
+
+  recipes = toSignal(this.recipes$, {
+    initialValue: [] as Recipe[],
+    rejectErrors: true,
   });
 
-  recipes$ = timer$.pipe(
-    switchMap((_) => this.http.get<Recipe[]>(`${BASE_PATH}/recipes`)),
-    share({ 
-      connector: () => new ReplaySubject(),
-      resetOnRefCountZero: false,
-      resetOnComplete: true,
-      resetOnError: true,
-     })
-  );
-
-  filterRecipeAction$ = this.filterRecipeSubject.asObservable();
+  filterRecipe = signal({Title: ''} as Recipe)
 
   constructor(private http: HttpClient) {}
 
   updateFilters(filter: Recipe) {
-    this.filterRecipeSubject.next(filter);
+    this.filterRecipe.set(filter);
   }
 
   saveRecipe(recipe: Recipe): Observable<Recipe> {

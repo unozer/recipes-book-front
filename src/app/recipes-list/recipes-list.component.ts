@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RecipesService } from '../core/services/recipes.service';
 import { DataViewModule } from 'primeng/dataview';
@@ -36,28 +36,14 @@ import { RealTimeService } from '../core/services/real-time.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipesListComponent {
-  recipes$ = combineLatest([
-    this.service.recipes$,
-    this.realTimeService.messages$,
-  ]).pipe(
-    scan((acc: Recipe[], [recipes, realTimeRecipes]: [Recipe[], Recipe[]]) => {
-      return acc.length === 0 && realTimeRecipes.length === 0 ? recipes : [...acc, ...realTimeRecipes];
-    }, [])
-  );
+  recipes$ = this.service.recipes$;
+  recipe = this.service.recipes;
+  recipesFilter = this.service.filterRecipe;
 
-  filterRecipeAction$ = this.service.filterRecipeAction$;
-
-  filteredRecipes$ = combineLatest([
-    this.recipes$,
-    this.filterRecipeAction$,
-  ]).pipe(
-    map(([recipes, filter]: [Recipe[], Recipe]) => {
-      const filterTitle = filter?.title?.toLowerCase() ?? '';
-      return recipes.filter((recipe) =>
-        recipe.title?.toLowerCase().includes(filterTitle)
-      );
-    })
-  );
+  filterRecipes = computed(() => {
+    const filterTitle = this.recipesFilter()?.title?.toLowerCase() ?? '';
+    return this.recipe().filter(recipe => recipe.title?.toLowerCase().includes(filterTitle));
+  });
 
   constructor(
     private service: RecipesService,
