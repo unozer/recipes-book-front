@@ -53,7 +53,7 @@ export class RecipesListComponent {
   ) {}
 
   editRecipe(recipe: Recipe) {
-    this.sharedService.updateSelectedRecipe(recipe);
+    this.sharedService.updateSelectedRecipe(recipe.id!);
     this.router.navigate(['recipes/details']);
   }
 }

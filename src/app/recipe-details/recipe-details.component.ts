@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SharedDataService } from '../core/services/shared-data.service';
 import { AsyncPipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-recipe-details',
@@ -10,7 +11,7 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './recipe-details.component.css'
 })
 export class RecipeDetailsComponent {
-  selectedRecipe$ = this.sharedService.selectedRecipe$;
+  selectedRecipe = toSignal(this.sharedService.recipes$);
 
   constructor(private sharedService: SharedDataService){}
 }

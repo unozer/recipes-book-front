@@ -1,4 +1,4 @@
-@if (selectedRecipe$ | async; as recipe) {
+@if (selectedRecipe(); as recipe) {
     <div style="margin: 64px; text-align: center;">
         <h1>{{recipe.title}}</h1>
         <p>{{recipe.steps}}</p>

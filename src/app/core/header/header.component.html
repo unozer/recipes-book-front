@@ -9,7 +9,7 @@
         <p-button class="header-menu-item" routerLink='' label="Recipes Book"></p-button>
         <img class="logo" [src]="'assets/recipes/chef.png'" alt="Chef logo" />
 
-        @if(selectedRecipe$ | async; as recipe) {
+        @if(selectedRecipe(); as recipe) {
             <span class="header-title">{{recipe.title}}</span>
         }
 

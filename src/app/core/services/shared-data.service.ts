@@ -1,18 +1,28 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { BehaviorSubject, filter, switchMap } from 'rxjs';
 import { Recipe } from '../model/recipe.model';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
+const BASE_PATH = environment.basePath;
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedDataService {
+  selectedRecipe = signal({} as Recipe)
+  selectedRecipeId = signal<number | undefined>(undefined);
 
-  private selectedRecipeSubject = new BehaviorSubject<Recipe | undefined>(undefined);
-  selectedRecipe$ = this.selectedRecipeSubject.asObservable();
+  recipes$ = toObservable(this.selectedRecipeId).pipe(
+    filter(Boolean), switchMap(id => 
+      this.http.get<Recipe>(`${BASE_PATH}/recipes/${id}`)
+    )
+  );
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  updateSelectedRecipe(recipe: Recipe) {
-    this.selectedRecipeSubject.next(recipe);
+  updateSelectedRecipe(recipeId: number) {
+    this.selectedRecipeId.set(recipeId);
   }
 }

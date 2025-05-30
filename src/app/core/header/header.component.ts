@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { SharedDataService } from '../services/shared-data.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-header',
@@ -12,6 +13,6 @@ import { SharedDataService } from '../services/shared-data.service';
 })
 export class HeaderComponent {
 
-  selectedRecipe$ = this.sharedService.selectedRecipe$;
+  selectedRecipe = toSignal(this.sharedService.recipes$);
   constructor(private sharedService: SharedDataService) {}
 }
