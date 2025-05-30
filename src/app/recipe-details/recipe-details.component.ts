@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SharedDataService } from '../shared-data.service';
+import { SharedDataService } from '../core/services/shared-data.service';
 import { AsyncPipe } from '@angular/common';
 
 @Component({

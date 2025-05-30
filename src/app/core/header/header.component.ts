@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
-import { SharedDataService } from 'src/app/shared-data.service';
+import { SharedDataService } from '../services/shared-data.service';
 
 @Component({
   selector: 'app-header',

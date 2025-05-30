@@ -12,7 +12,7 @@ import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { Recipe } from '../core/model/recipe.model';
 import { combineLatest, filter, map, Observable, scan } from 'rxjs';
-import { SharedDataService } from '../shared-data.service';
+import { SharedDataService } from '../core/services/shared-data.service';
 import { Router } from '@angular/router';
 import { RealTimeService } from '../core/services/real-time.service';
 
